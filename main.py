@@ -13,7 +13,7 @@ def read_data(file_path):
         for line in train_lines:
             pattern, label = line.strip().split()
             X.append([int(bit) for bit in pattern])
-            y.append([int(label)])
+            y.append(int(label))
 
     X_train = np.array(X)
     y_train = np.array(y)
@@ -23,7 +23,7 @@ def read_data(file_path):
     for line in test_lines:
         pattern2, label2 = line.strip().split()
         X_test.append([int(bit) for bit in pattern2])
-        Y_test.append([int(label2)])
+        Y_test.append(int(label2))
 
     X_test = np.array(X_test)
     Y_test = np.array(Y_test)
@@ -31,38 +31,39 @@ def read_data(file_path):
 
     return X_train, y_train, X_test, Y_test
 
+def min_max_norm(X):
+        min_value = np.min(X)
+        max_value = np.max(X)
+
+        range_value = max_value - min_value   
+        normalized_X = (X - min_value) / range_value
+            
+        return normalized_X
 
 def main():
     # Read data
     file = 'nn0.txt'
     X_train, y_train, X_test, test_real_lables = read_data(file)
 
+    n_x_train = min_max_norm(X_train)
+    n_x_test = min_max_norm(X_test)
+
+
+    print(X_train.shape, y_train.shape)
+
     #print(str(test_real_lables) + "\n")
-    #print(y_train[0:20])
-
     # Define network parameters
-    input_size = len(X_train[0])
-    hidden_size = 4  # Adjust the number of hidden units as desired
+    feature_number = len(X_train[1])
+    hidden_size = 3
     output_size = 1
+    num_of_epochs = 5
 
+  
     # Create and train the neural network
-    neural_net = SimpleNeuralNetwork.NeuralNetwork(input_size, hidden_size, output_size)
-    epochs = 3  # Adjust the number of training epochs as desired
-    learning_rate = 0.1  # Adjust the learning rate as desired
-    for _ in range(epochs):
-        neural_net.forward(X_train)
-        neural_net.backward(X_train, y_train, learning_rate)
-
-    # Classify test patterns and save the labels
-    test_labels = []
-    for i in range(len(X_test)):
-        y_pred = neural_net.forward(X_test[i])
-        test_labels.append(int(np.round(y_pred)))
-    
-    #verify the results:
-    for label in range(len(test_real_lables)):
-        if test_labels[label] != test_real_lables[label]:
-            print(f'Test pattern {label}: real label is: {test_real_lables[label]}  the result was: {test_labels[label]}')
+    neural_net = SimpleNeuralNetwork.SimpleNeuralNetwork(feature_number, hidden_size,output_size)
+    neural_net.train(X_train, y_train, num_of_epochs)
+    accuracy = neural_net.test(X_test, test_real_lables)
+    print(accuracy)
 
 if __name__ == '__main__':
     main()
