@@ -58,10 +58,9 @@ def main():
     output_size = 1
     num_of_epochs = 5
 
-  
     # Create and train the neural network
     neural_net = SimpleNeuralNetwork.SimpleNeuralNetwork(feature_number, hidden_size,output_size)
-    neural_net.train(X_train, y_train, num_of_epochs)
+    neural_net.train(X_train, y_train)
     accuracy = neural_net.test(X_test, test_real_lables)
     print(accuracy)
 
