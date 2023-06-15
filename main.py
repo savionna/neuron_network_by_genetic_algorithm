@@ -38,6 +38,7 @@ def min_max_norm(X):
         range_value = max_value - min_value   
         normalized_X = (X - min_value) / range_value
             
+            
         return normalized_X
 
 def main():
