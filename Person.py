@@ -64,6 +64,23 @@ class Person:
         # Create a copy of the individual and update the mutated weight value
         self.weights[random_number][random_indices] = mutated_value
     
+    def test(self, x, y):
+        true_pred_counter = 0
+        for i in range(len(x)):
+            a = x[i]
+            for layer in range(self.layers_amount):
+                z = np.dot(a, self.weights[layer])
+                a = self.sigmoid(z)
+
+            y_hat = float(np.argmax(self.softmax(a)))
+            y_true = float(y[i])
+
+            if y_hat == y_true:
+                true_pred_counter += 1
+
+        accuracy = true_pred_counter / len(y)
+        return accuracy
+    
     
     
 

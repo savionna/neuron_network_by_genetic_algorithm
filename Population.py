@@ -10,12 +10,12 @@ class Population:
         self.x_train = x_train
         self.y_train = y_train
         self.population = []
-        self.layers_amount = 3
-        self.size_of_layers = [16, 4, 2]
+        self.layers_amount = 2
+        self.size_of_layers = [4,2]
         #self.size_of_layers = [16, 32, 128, 32, 16, 2]
         self.population_size = 200
         self.mutation_rate = 0.9
-        self.generation_number = 400
+        self.generation_number = 100
         self.feature_number = x_train.shape[1]
         
 
@@ -60,6 +60,7 @@ class Population:
             random_indexes = random.sample(range(len(people_after_cross)), mutation_precent)
             for index in random_indexes:
                 people_after_cross[index].mutate()
+                people_after_cross[index].mutate()
 
             for y in range(self.population_size - amount):
                 offspring.append(copy.deepcopy(people_after_cross[y]))
@@ -71,6 +72,7 @@ class Population:
             # Print the best fitness score in the current generation
             best_fitness = np.max(fitness_scores)
             print("Generation:", generation, "Best Fitness:", best_fitness)
+        return best_person
 
     def compute_fitness(self):
         fitness_scores = []
@@ -139,5 +141,7 @@ class Population:
 
         return offspring
         
-    def test(self,x, y):
-        pass
+    
+    
+    
+        

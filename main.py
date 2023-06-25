@@ -1,6 +1,7 @@
 import numpy as np
 import Population
 import Person
+import copy
 
 def read_data(file_path):
     X = []
@@ -48,7 +49,8 @@ def main():
     neural_net.create_population()
     # for person in neural_net.get_population():
     #     person.train()
-    neural_net.next_generation()
+    best_neural_net = copy.deepcopy(neural_net.next_generation())
+    print("final test", best_neural_net.test(X_test, test_real_lables))
     
 
 
