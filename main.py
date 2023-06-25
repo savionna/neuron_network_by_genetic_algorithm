@@ -1,5 +1,6 @@
 import numpy as np
-import SimpleNeuralNetwork
+import Population
+import Person
 
 def read_data(file_path):
     X = []
@@ -31,39 +32,32 @@ def read_data(file_path):
 
     return X_train, y_train, X_test, Y_test
 
-def min_max_norm(X):
-        min_value = np.min(X)
-        max_value = np.max(X)
-
-        range_value = max_value - min_value   
-        normalized_X = (X - min_value) / range_value
-            
-            
-        return normalized_X
-
 def main():
     # Read data
     file = 'nn0.txt'
     X_train, y_train, X_test, test_real_lables = read_data(file)
-
-    n_x_train = min_max_norm(X_train)
-    n_x_test = min_max_norm(X_test)
-
-
-    print(X_train.shape, y_train.shape)
-
-    #print(str(test_real_lables) + "\n")
-    # Define network parameters
-    feature_number = len(X_train[1])
-    hidden_size = 3
-    output_size = 1
-    num_of_epochs = 5
-
+    feature_number = X_train.shape[1]
+    
     # Create and train the neural network
-    neural_net = SimpleNeuralNetwork.SimpleNeuralNetwork(feature_number, hidden_size,output_size)
-    neural_net.train(X_train, y_train)
-    accuracy = neural_net.test(X_test, test_real_lables)
-    print(accuracy)
+    #neural_net = Population.Population(X_train, y_train)
+    #accuracy = neural_net.test(X_test, test_real_lables)
+    #print(accuracy)
 
-if __name__ == '__main__':
+    #check the person class:
+    neural_net = Population.Population(X_train, y_train)
+    neural_net.create_population()
+    # for person in neural_net.get_population():
+    #     person.train()
+    neural_net.next_generation()
+    
+
+
+
+    #check the person class:
+    # size_of_layers = [16, 32, 128, 32, 16, 2]
+    # print(feature_number)
+    # test_person = Person.Person(X_train, y_train, 6, size_of_layers, feature_number)
+    # test_person.train()
+
+if __name__ == "__main__":
     main()
