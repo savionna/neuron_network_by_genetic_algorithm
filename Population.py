@@ -3,6 +3,7 @@ import random
 import Person
 import math
 import copy
+import matplotlib.pyplot as plt
 
 
 class Population:
@@ -12,10 +13,9 @@ class Population:
         self.population = []
         self.layers_amount = 2
         self.size_of_layers = [4,2]
-        #self.size_of_layers = [16, 32, 128, 32, 16, 2]
         self.population_size = 200
         self.mutation_rate = 0.9
-        self.generation_number = 100
+        self.generation_number = 200
         self.feature_number = x_train.shape[1]
         
 
@@ -32,18 +32,17 @@ class Population:
             
 
     def next_generation(self):
+        temp_fitness = 0
+        count = 0
+        generations = []
+        fitness_history = []
         mutation_precent = int(self.population_size*self.mutation_rate)
         for generation in range(self.generation_number):
+            generations.append(generation)
             offspring = []
             fitness_scores = self.compute_fitness()
-
-            # print("taco")
-            # for person in self.population:
-            #     print(person.get_fitness())
             max_index = np.argmax(fitness_scores)
-            #print("The best fit: ", fitness_scores[max_index])
             best_person = self.population[max_index]
-            #print("Best person fit: ", best_person.get_fitness())
 
             amount = best_person.get_fitness()*10
             amount = math.ceil((self.population_size/100)*amount)
@@ -60,7 +59,7 @@ class Population:
             random_indexes = random.sample(range(len(people_after_cross)), mutation_precent)
             for index in random_indexes:
                 people_after_cross[index].mutate()
-                people_after_cross[index].mutate()
+                #people_after_cross[index].mutate()
 
             for y in range(self.population_size - amount):
                 offspring.append(copy.deepcopy(people_after_cross[y]))
@@ -69,9 +68,32 @@ class Population:
             # Replace the old population with the offspring
             self.population = offspring
 
+
             # Print the best fitness score in the current generation
             best_fitness = np.max(fitness_scores)
-            print("Generation:", generation, "Best Fitness:", best_fitness)
+            fitness_history.append(float(best_fitness))
+            if temp_fitness == 0:
+                temp_fitness = best_fitness
+            else:
+                if best_fitness - temp_fitness < 0.01:
+                    count +=1
+                else:
+                    count =0
+            
+            if count > 5:
+                return best_person
+
+            print("Generation number:", generation, "Fitness:", best_fitness)
+
+
+        # # Plot the fitness history
+        # generations = range(self.generation_number)
+        # plt.plot(generations, fitness_history)
+        # plt.xlabel("Generation")
+        # plt.ylabel("Best Fitness")
+        # plt.title("Best Fitness Score over Generations")
+        # plt.savefig('my_plot.png')
+            
         return best_person
 
     def compute_fitness(self):
@@ -98,9 +120,6 @@ class Population:
         # Randomly select parents based on the probabilities
         parents_indices = np.random.choice(selected_indices, size=self.population_size, replace=True, p=probabilities)
         parents = [self.population[i] for i in parents_indices]
-        # print(fitness_scores)
-        # for p in parents:
-        #     print(p.get_fitness())
         return parents
 
     def crossover(self, parents):
