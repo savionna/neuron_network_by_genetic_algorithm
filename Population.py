@@ -3,7 +3,7 @@ import random
 import Person
 import math
 import copy
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 
 class Population:
